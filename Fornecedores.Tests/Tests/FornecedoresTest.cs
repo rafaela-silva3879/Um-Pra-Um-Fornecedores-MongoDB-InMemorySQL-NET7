@@ -53,8 +53,11 @@ namespace Fornecedores.Tests.Tests
             result.StatusCode.Should().Be(HttpStatusCode.Created);
 
             response.IdFornecedor.Should().NotBeNull();
-            response.Endereco.IdEndereco.Should().NotBeNull();
             response.Nome.Should().Be(request.Nome);
+            response.Endereco.Should().NotBeNull();
+            response.Endereco.IdEndereco.Should().NotBeNull();
+            response.Endereco.IdEndereco.Should().Be(response.IdEndereco);
+            response.Endereco.Logradouro.Should().Be(request.Endereco.Logradouro);
 
             return response;
         }
@@ -69,11 +72,11 @@ namespace Fornecedores.Tests.Tests
             request.CNPJ = f.CNPJ;
             request.Nome = f.Nome;
             request.Telefone = f.Telefone;
-            request.IdEndereco = f.Endereco.IdEndereco;
+            request.IdEndereco = f.IdEndereco;
 
 
             request.Endereco = new EnderecoUpdateCommand();
-            request.Endereco.IdEndereco = f.Endereco.IdEndereco;
+            request.Endereco.IdEndereco = f.IdEndereco;
             request.Endereco.Bairro = f.Endereco.Bairro;
             request.Endereco.Cep = f.Endereco.Cep;
             request.Endereco.Cidade = f.Endereco.Cidade;
@@ -92,10 +95,11 @@ namespace Fornecedores.Tests.Tests
 
             response.IdFornecedor.Should().Be(request.IdFornecedor);
             response.Nome.Should().Be(request.Nome);
-            request.IdEndereco.Should().Be(request.IdEndereco);
-            request.Endereco.Should().Be(request.Endereco.IdEndereco);
-            request.Endereco.Should().NotBeNull();
-            request.Endereco.Logradouro.Should().Be(request.Endereco.Logradouro);
+            response.Endereco.Should().NotBeNull();
+            response.IdEndereco.Should().Be(request.IdEndereco);
+            response.Endereco.IdEndereco.Should().Be(request.IdEndereco);
+
+            response.Endereco.Logradouro.Should().Be(request.Endereco.Logradouro);
         }
 
         [Fact]
