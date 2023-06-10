@@ -68,7 +68,7 @@ namespace Fornecedores.Tests.Tests
             var f = await Test_Post_Fornecedores_Returns_Created();
             var request = new FornecedorUpdateCommand();
 
-            request.IdFornecedor = request.IdFornecedor;
+            request.IdFornecedor = f.IdFornecedor;
             request.CNPJ = f.CNPJ;
             request.Nome = f.Nome;
             request.Telefone = f.Telefone;
@@ -145,7 +145,7 @@ namespace Fornecedores.Tests.Tests
             var f = await Test_Post_Fornecedores_Returns_Created();
 
             var client = TestHelper.CreateClient;
-           
+
             var result = await client.GetAsync(_endpoint + "/" + f.IdFornecedor);
 
             var response = TestHelper.ReadResponse<FornecedorQuery>(result);
