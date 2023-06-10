@@ -38,13 +38,17 @@ namespace Fornecedores.Infra.Data.MongoDB.Cache
         {
             //foenecedores
             var filter = Builders<Fornecedor>.Filter.Empty;
-            var retorno= _mongoDbContext.Fornecedores.Find(filter).ToList();
+            var retorno = _mongoDbContext.Fornecedores.Find(filter).ToList();
 
 
             //enderecos
+            /*
             var client = new MongoClient();
-            var database = client.GetDatabase("dbFornecedores");
+            var database = client.GetDatabase("dbFornecedores"); 
             var collectionEnderecos = database.GetCollection<Endereco>("enderecos").AsQueryable().ToList();
+            */
+            // var filterEnd = Builders<Endereco>.Filter.Empty;
+            //var retornoEnd = _mongoDbContext.Enderecos.Find(filterEnd).ToList();
 
 
             var lista = new List<Fornecedor>();
@@ -55,36 +59,40 @@ namespace Fornecedores.Infra.Data.MongoDB.Cache
 
                 f = item;
                 f.Endereco = new Endereco();
-                f.Endereco = collectionEnderecos.Where(e => e.IdEndereco== item.IdEndereco).FirstOrDefault();
-                lista.Add(f);
+                var filterEnd = Builders<Endereco>.Filter.Eq(e => e.IdEndereco, f.IdEndereco);
+                f.Endereco = new Endereco();
+                f.Endereco = _mongoDbContext.Enderecos.Find(filterEnd).FirstOrDefault();
 
+                lista.Add(f);
             }
             return lista;
         }
         public Fornecedor GetById(Guid IdFornecedor)
         {
-            /*
+
             var filter = Builders<Fornecedor>.Filter.Eq(c => c.IdFornecedor, IdFornecedor);
-            return _mongoDbContext.Fornecedores.Find(filter).FirstOrDefault();
-            */
+            var results = _mongoDbContext.Fornecedores.Find(filter).FirstOrDefault();
 
 
-         
-            var client = new MongoClient();
-            var database = client.GetDatabase("dbFornecedores");
-            var collection = database.GetCollection<Fornecedor>("fornecedores");
 
-            var results = collection.Find(f => f.IdFornecedor == IdFornecedor).FirstOrDefault();
+            /*
+               var client = new MongoClient();
+               var database = client.GetDatabase("dbFornecedores");
 
+               var collection = database.GetCollection<Fornecedor>("fornecedores");
+               var results = collection.Find(f => f.IdFornecedor == IdFornecedor).FirstOrDefault();
 
             //enderecos
             var collectionEnderecos = database.GetCollection<Endereco>("enderecos").AsQueryable().ToList();
-
-            var idEnd = results.IdEndereco;
-
             results.Endereco = new Endereco();
-            results.Endereco = collectionEnderecos.Where(e => e.IdEndereco == idEnd).FirstOrDefault();
+            results.Endereco = collectionEnderecos.Where(e => e.IdEndereco == results.IdEndereco).FirstOrDefault();
            
+             */
+            //enderecos
+
+            var filterEnd = Builders<Endereco>.Filter.Eq(e => e.IdEndereco, results.IdEndereco);
+            results.Endereco = new Endereco();
+            results.Endereco = _mongoDbContext.Enderecos.Find(filterEnd).FirstOrDefault();
 
 
 
